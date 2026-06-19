@@ -1,0 +1,592 @@
+# Windforge (@windforge/ui)
+
+> A composable, configurable, strict React design system built on Radix + Tailwind
+> with CSS-variable tokens and zero CSS-in-JS runtime. You build with two surfaces:
+> intent-named component props, and `--wf-*` design tokens.
+
+## Rules
+
+- Compose components and set intent-named props (e.g. `variant="primary"`,
+  `padding="card"`, `gap="md"`). Props expose only the closed set of on-system
+  values listed below — do not invent values.
+- `className` and `style` are rejected at the type level on components. Only the
+  layout primitives `Box` / `Stack` / `Grid` accept `className` (incl. Tailwind
+  arbitrary values like `w-[37%]`) and `style`, as the escape hatch.
+- Use `Box` / `Stack` / `Grid` for layout and `Text` / `H1`–`H6` for type instead
+  of bare `<div>` / `<span>`. Components are fluid; size them via the layout around
+  them.
+- Re-skin by overriding `--wf-*` tokens (see `@windforge/tokens`), never by editing
+  components. A token change cannot break a layout.
+
+## Setup
+
+```js
+// tailwind.config.cjs
+module.exports = {
+  presets: [require('@windforge/ui/tailwind')],
+  content: ['./src/**/*.{ts,tsx}', './node_modules/@windforge/ui/src/**/*.{ts,tsx}'],
+}
+```
+
+```tsx
+import { ThemeProvider } from '@windforge/ui'
+import '@windforge/tokens/tokens.css'
+
+<ThemeProvider defaultMode="system" persist><App /></ThemeProvider>
+```
+
+## Components
+
+### Box
+A padded, optionally-surfaced container — the on-system replacement for a bare <div>.
+
+Props:
+- `padding`: `none` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `nbsp` | `card` | `gutter` | `section` | `page`
+- `paddingX`: `none` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `nbsp` | `card` | `gutter` | `section` | `page`
+- `paddingY`: `none` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `nbsp` | `card` | `gutter` | `section` | `page`
+- `background`: `none` | `surface` | `subtle` | `inset` | `inverse` | `brand`
+- `border`: `none` | `default` | `subtle` | `strong`
+- `borderRadius`: `none` | `sm` | `md` | `lg` | `xl` | `2xl` | `full`
+- `boxShadow`: `none` | `sm` | `md` | `lg` | `xl`
+- `maxWidth`: `sm` | `md` | `lg` | `xl` | `prose` | `full`
+
+Flags:
+- `asChild`: Render as a child element (polymorphic, replaces MUI component=)
+
+### Stack
+A flex Box — the primary way to arrange children in a row or column with on-scale gap.
+
+Props:
+- `direction`: `row` | `column`
+- `gap`: `none` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `nbsp` | `card` | `gutter` | `section` | `page`
+- `align`: `start` | `center` | `end` | `stretch` | `baseline`
+- `justify`: `start` | `center` | `end` | `between` | `around`
+- `padding`: `none` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `nbsp` | `card` | `gutter` | `section` | `page`
+- `paddingX`: `none` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `nbsp` | `card` | `gutter` | `section` | `page`
+- `paddingY`: `none` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `nbsp` | `card` | `gutter` | `section` | `page`
+- `background`: `none` | `surface` | `subtle` | `inset` | `inverse` | `brand`
+- `border`: `none` | `default` | `subtle` | `strong`
+- `borderRadius`: `none` | `sm` | `md` | `lg` | `xl` | `2xl` | `full`
+- `boxShadow`: `none` | `sm` | `md` | `lg` | `xl`
+- `maxWidth`: `sm` | `md` | `lg` | `xl` | `prose` | `full`
+
+Flags:
+- `wrap`: flex-wrap when true
+- `asChild`: Render as a child element (polymorphic)
+
+### Grid
+A closed-vocabulary CSS grid with responsive column counts and on-scale gap.
+
+Props:
+- `cols`: `1` | `2` | `3` | `4` | `5` | `6` | `12`
+- `mdCols`: `1` | `2` | `3` | `4` | `5` | `6` | `12`
+- `gap`: `none` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `nbsp` | `card` | `gutter` | `section` | `page`
+- `align`: `start` | `center` | `end` | `stretch`
+- `justify`: `start` | `center` | `end` | `stretch`
+
+Flags:
+- `asChild`: Render as a child element (polymorphic)
+
+### Text
+The typography primitive — renders a <p> by default; use asChild for semantics.
+
+Props:
+- `size`: `sm` | `base` | `lg` | `xl` | `2xl` | `3xl` | `4xl` | `5xl` | `6xl`
+- `weight`: `light` | `regular` | `medium` | `semibold` | `bold`
+- `tone`: `default` | `muted` | `subtle` | `disabled` | `inverse` | `brand` | `link` | `gradient`
+- `align`: `left` | `center` | `right`
+- `variant`: `inline-code`
+
+Flags:
+- `truncate`: Adds CSS truncation (single line ellipsis)
+- `mono`: Switches to monospace font
+- `span`: Render inline as a <span> instead of a block <p>
+- `asChild`: Render as the wrapped child element for semantic control
+
+### H1
+Semantic headings: H1–H6 render the matching <h1>–<h6> with a sensible size default per level; override size freely. (H2…H6 share this API.)
+
+Props:
+- `size`: `sm` | `base` | `lg` | `xl` | `2xl` | `3xl` | `4xl` | `5xl` | `6xl`
+- `weight`: `light` | `regular` | `medium` | `semibold` | `bold`
+- `tone`: `default` | `muted` | `subtle` | `disabled` | `inverse` | `brand` | `link`
+- `align`: `left` | `center` | `right`
+
+Flags:
+- `truncate`: Adds CSS truncation
+
+### Button
+The primary action element. Hierarchy is expressed through variant, never hue.
+
+Props:
+- `variant`: `primary` | `secondary` | `tertiary` | `link` | `destructive`
+- `size`: `sm` | `md` | `lg` | `icon`
+
+Flags:
+- `asChild`: Render as a child element (e.g. router link)
+
+### ButtonGroup
+Joins a row of Buttons into a segmented control with shared edges and a single outer radius.
+
+Flags:
+- `children (Button elements)`: Any Button variant; the group collapses the seams
+
+### ToggleButton
+A pressable button inside ToggleButtonGroup that tracks selected state.
+
+Flags:
+- `value`: String identifier used by ToggleButtonGroup to track selection
+
+### ToggleButtonGroup
+Segmented control; type="single" allows one selection, type="multiple" allows many.
+
+Props:
+- `type`: `single` | `multiple`
+
+### Link
+An inline anchor styled in the link color. Use asChild to wrap a router link.
+
+Props:
+- `underline`: `hover` | `always` | `none`
+
+Flags:
+- `asChild`: Render as a child element, keeping Link styling
+
+### Badge
+A static label pill for status, category, or count. Non-interactive.
+
+Props:
+- `variant`: `brand` | `subtle` | `neutral` | `outline` | `success` | `warning` | `error` | `info`
+- `size`: `sm` | `md`
+
+### Chip
+An interactive pill for filtering or selection. Distinct from Badge. Pass onDelete for a removable chip.
+
+Props:
+- `size`: `sm` | `md`
+
+Flags:
+- `selected`: Boolean — shows the neutral selected (inverse) fill when true
+- `clickable`: Set implicitly when onClick is provided
+- `onDelete`: Renders a trailing ✕ dismiss button
+- `disabled`: Dims and disables interaction
+- `icon`: Optional leading ReactNode (e.g. an icon)
+
+### Alert
+An inline status message. Icon carries the hue; body text stays neutral.
+
+Props:
+- `variant`: `neutral` | `info` | `success` | `warning` | `error`
+
+Flags:
+- `title`: Heading (ReactNode)
+- `description`: Body text (ReactNode)
+- `icon`: Leading status icon (a lucide element)
+- `actions`: Trailing actions, typically buttons (ReactNode)
+
+### Avatar
+A circular image or fallback initials display. The fallback text scales with size.
+
+Props:
+- `size`: `sm` | `md` | `lg` | `xl`
+
+Flags:
+- `AvatarImage src`: Image URL; falls back to AvatarFallback when unresolvable
+- `AvatarFallback`: Text shown while image loads or if it fails
+
+### Card
+A Box preset with surface background, default border, 2xl radius, and sm shadow. Accepts all Box props except className/style.
+
+Props:
+- `padding`: `none` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `nbsp` | `card` | `gutter` | `section` | `page`
+- `paddingX`: `none` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `nbsp` | `card` | `gutter` | `section` | `page`
+- `paddingY`: `none` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `nbsp` | `card` | `gutter` | `section` | `page`
+- `background`: `none` | `surface` | `subtle` | `inset` | `inverse` | `brand`
+- `border`: `none` | `default` | `subtle` | `strong`
+- `borderRadius`: `none` | `sm` | `md` | `lg` | `xl` | `2xl` | `full`
+- `boxShadow`: `none` | `sm` | `md` | `lg` | `xl`
+
+Flags:
+- `title`: Heading (ReactNode)
+- `description`: Sub-heading body text (ReactNode)
+- `headerAction`: Trailing header content opposite the title, e.g. a Badge (ReactNode)
+- `footer`: Footer content, typically buttons (ReactNode)
+- `children`: Card body content
+
+### Input
+A styled text input. Pass standard HTML input props (type, placeholder, disabled, …).
+
+Flags:
+- `type`: HTML input type (text, email, password, number, …)
+- `placeholder`: Placeholder text
+- `disabled`: Dims and disables the field
+- `invalid`: Error state — red outline + aria-invalid (usually set by FormField)
+
+### Textarea
+A styled multiline text input. Pass standard HTML textarea props.
+
+Flags:
+- `placeholder`: Placeholder text
+- `disabled`: Dims and disables the field
+- `rows`: Number of visible text rows
+- `invalid`: Error state — red outline + aria-invalid (usually set by FormField)
+
+### Label
+A form label that connects to a field via htmlFor (Radix Label under the hood).
+
+### FormField
+Renders a labelled control and wires the label, description, required marker, and error state with correct ids and ARIA. Renders an Input by default; pass a child to wrap Textarea/Select/Autocomplete. The on-system way to build accessible forms.
+
+Flags:
+- `label`: Field label (ReactNode); rendered as a <Label> bound to the control
+- `description`: Helper text below the label — normal foreground, meant to be read
+- `placeholder`: Placeholder forwarded onto the control (a prop on the child wins)
+- `type`: Input type for the default control (text, email, password, …)
+- `error`: Error message (ReactNode); its presence sets the control to invalid
+- `required`: Adds a required marker and aria-required
+- `children`: Escape hatch — a non-Input control to wrap; omit to render an Input
+
+### Select
+A styled dropdown select. Pass an options array, or compose the primitives for groups/labels/custom triggers.
+
+Flags:
+- `options`: Array of { value: string; label: ReactNode; disabled?: boolean } — the props API
+- `placeholder`: Placeholder shown before a value is chosen
+- `value`: Controlled value
+- `onValueChange`: Callback with the selected value
+- `disabled`: Disables the trigger
+- `invalid`: Error state — red trigger outline + aria-invalid (usually set by FormField)
+- `SelectTrigger`: Escape hatch: the visible trigger element
+- `SelectContent`: Escape hatch: the dropdown panel
+- `SelectItem`: Escape hatch: an individual option (value, children)
+- `SelectGroup`: Escape hatch: groups items under a SelectLabel
+- `SelectLabel`: Escape hatch: a non-selectable group heading
+- `SelectValue`: Escape hatch: renders the current value inside SelectTrigger
+
+### Autocomplete
+A searchable single-select combobox with keyboard navigation.
+
+Flags:
+- `options`: Array of { value: string; label: string }
+- `value`: Controlled current value (string | null)
+- `onValueChange`: Called with the new value or null on clear
+- `placeholder`: Input placeholder text
+- `emptyText`: Message shown when filter yields no results
+- `disabled`: Dims and disables the field
+- `invalid`: Error state — red field outline + aria-invalid (usually set by FormField)
+
+### MultiSelect
+A searchable multi-value combobox. Selected values render as removable tags; the dropdown filters as you type. Controlled via value/onValueChange.
+
+Flags:
+- `options`: Array of { value: string; label: string }
+- `value`: Controlled selected values (string[])
+- `onValueChange`: Called with the new value array
+- `placeholder`: Field placeholder when nothing is selected
+- `emptyText`: Message shown when the filter yields no results
+- `disabled`: Dims and disables the field
+- `invalid`: Error state — red outline + aria-invalid (usually set by FormField)
+
+### DatePicker
+A single-date field: a styled trigger that opens the Calendar in a Popover. Controlled via value/onValueChange. For ranges, use Calendar directly.
+
+Flags:
+- `value`: Selected Date (or undefined)
+- `onValueChange`: Called with the chosen Date (or undefined)
+- `placeholder`: Trigger text before a date is chosen
+- `disabled`: Dims and disables the trigger
+- `invalid`: Error state — red outline + aria-invalid (usually set by FormField)
+- `formatOptions`: Intl.DateTimeFormatOptions for the displayed value
+
+### Calendar
+The date grid (react-day-picker), token-styled with no vendor CSS. Pass any react-day-picker prop — mode="single|range|multiple", selected, onSelect.
+
+Props:
+- `mode`: `single` | `multiple` | `range`
+
+Flags:
+- `selected`: Selected date(s) — shape depends on mode
+- `onSelect`: Selection callback — shape depends on mode
+- `showOutsideDays`: Render days from adjacent months (default true)
+
+### Command
+A fast, filterable command menu / palette (cmdk). Compose Command > CommandInput + CommandList (CommandEmpty/CommandGroup/CommandItem/CommandSeparator), or use CommandDialog for a ⌘K palette.
+
+Flags:
+- `CommandInput`: The search field
+- `CommandList`: Scrollable results region
+- `CommandEmpty`: Shown when nothing matches
+- `CommandGroup`: A labelled group (heading prop)
+- `CommandItem`: A selectable row (onSelect, value)
+- `CommandSeparator`: A divider between groups
+- `CommandShortcut`: Trailing keyboard hint
+- `CommandDialog`: The palette in a centered overlay (open, onOpenChange)
+
+### Checkbox
+A binary toggle. Pair with Label for an accessible label.
+
+Flags:
+- `checked`: Controlled checked state
+- `onCheckedChange`: Callback with the new boolean
+- `disabled`: Disables the checkbox
+
+### RadioGroup
+A group of mutually exclusive RadioGroupItem options.
+
+Flags:
+- `value`: Controlled value
+- `onValueChange`: Callback with the selected value
+- `RadioGroupItem value`: The string value for each item; pair with Label
+
+### Switch
+A toggle switch (on/off). Pair with Label for an accessible label.
+
+Flags:
+- `checked`: Controlled checked state
+- `onCheckedChange`: Callback with the new boolean
+- `disabled`: Disables the switch
+
+### Slider
+A range slider for numeric input.
+
+Flags:
+- `value`: Controlled value array e.g. [50]
+- `onValueChange`: Callback with the new value array
+- `min`: Minimum value (default 0)
+- `max`: Maximum value (default 100)
+- `step`: Step increment
+- `disabled`: Disables the slider
+
+### Tabs
+Tabbed content switcher. Pass an items array, or compose TabsList/TabsTrigger/TabsContent by hand.
+
+Flags:
+- `items`: Array of { value, label, content, disabled? } — the props API
+- `defaultValue`: Initially active tab value
+- `value`: Controlled active tab value
+- `onValueChange`: Callback with new tab value
+- `TabsList / TabsTrigger / TabsContent`: Escape hatch primitives for hand-composition
+
+### Accordion
+Vertically stacked collapsible sections. Pass an items array, or compose the primitives. type="single" or "multiple".
+
+Props:
+- `type`: `single` | `multiple`
+
+Flags:
+- `items`: Array of { value, trigger, content, disabled? } — the props API
+- `collapsible`: When type="single", allows deselecting the open item
+- `AccordionItem / AccordionTrigger / AccordionContent`: Escape hatch primitives for hand-composition
+
+### Breadcrumb
+Navigation trail. Pass an items array; the last item is the current (non-link) page.
+
+Flags:
+- `items`: Array of { label: ReactNode, href?: string }; the final item renders as the current page
+- `separator`: Divider between crumbs; defaults to a ChevronRight (ReactNode)
+
+### Pagination
+Controlled page navigation with previous/next buttons, a window of sibling pages, and ellipses.
+
+Flags:
+- `page`: 1-based current page number
+- `count`: Total number of pages
+- `onPageChange`: Callback with the new page number
+- `siblingCount`: Number of pages to show on each side of the current (default 1)
+
+### Stepper
+Linear progress through a sequence of named steps.
+
+Props:
+- `orientation`: `horizontal` | `vertical`
+
+Flags:
+- `steps`: Array of { label: string; description?: string }
+- `activeStep`: 0-based index of the current step
+
+### Dialog
+A convenience overlay with title, description, and footer actions — built on Modal.
+
+Props:
+- `size`: `sm` | `md` | `lg` | `xl`
+
+Flags:
+- `trigger`: The element that opens the dialog
+- `title`: Heading text (required)
+- `description`: Body text below the title
+- `actions`: ReactNode for the footer, typically buttons
+- `open`: Controlled open state
+- `onOpenChange`: Callback when open state changes
+
+### Modal
+Low-level composable overlay (Radix Dialog). Use Dialog for the common case.
+
+Props:
+- `size`: `sm` | `md` | `lg` | `xl`
+
+Flags:
+- `ModalTrigger`: The trigger element; use asChild to keep your button
+- `ModalContent`: The panel; size prop sets max-width
+- `ModalClose`: Programmatic close trigger; use asChild
+- `hideClose`: Hide the default corner ✕ on ModalContent
+
+### Popover
+A small floating panel anchored to a trigger. Compose: Popover > PopoverTrigger + PopoverContent.
+
+Flags:
+- `PopoverTrigger asChild`: Attach the trigger to your own element
+- `PopoverContent align`: Alignment relative to the trigger (start|center|end)
+- `PopoverContent sideOffset`: Distance from the trigger in px (default 6)
+
+### Sheet
+A slide-in drawer anchored to a screen edge.
+
+Props:
+- `side`: `top` | `bottom` | `left` | `right`
+
+Flags:
+- `SheetTrigger asChild`: Attach the trigger to your own element
+- `SheetContent title`: Accessible sheet title (ReactNode)
+- `SheetContent description`: Supporting body text (ReactNode)
+- `SheetContent footer`: Action row pinned to the bottom (ReactNode)
+- `SheetClose asChild`: Programmatic close trigger
+
+### DropdownMenu
+A contextual menu anchored to a trigger. Pass trigger + items for the common case, or compose the primitives for checkboxes, radios, and sub-menus.
+
+Flags:
+- `trigger`: The element that opens the menu (rendered via asChild)
+- `items`: Array of { label, icon?, shortcut?, onSelect?, disabled? } | { type: "separator" } | { type: "label", label } — the props API
+- `DropdownMenuTrigger asChild`: Escape hatch: use your own element as the trigger
+- `DropdownMenuContent`: Escape hatch: the floating menu panel
+- `DropdownMenuItem`: Escape hatch: a clickable item; inset adds left padding
+- `DropdownMenuCheckboxItem`: Escape hatch: a checkable item
+- `DropdownMenuRadioGroup / DropdownMenuRadioItem`: Escape hatch: radio group + items
+- `DropdownMenuLabel / DropdownMenuSeparator / DropdownMenuShortcut`: Escape hatch: label, divider, shortcut
+- `DropdownMenuSub / DropdownMenuSubTrigger / DropdownMenuSubContent`: Escape hatch: nested sub-menus
+
+### Tooltip
+A floating label on hover/focus. Wrap with TooltipProvider at the app root.
+
+Flags:
+- `TooltipProvider`: Render once near the app root to share delay
+- `TooltipTrigger asChild`: Attach the tooltip to your own element
+- `TooltipContent`: The tooltip bubble; sideOffset adjusts distance
+
+### Progress
+A horizontal progress bar. value is 0–100.
+
+Flags:
+- `value`: Number 0–100 representing completion percentage
+- `indeterminate`: Looping animation for work of unknown duration; ignores value
+
+### Skeleton
+An animated placeholder while content loads. Size with width/height via className on Box.
+
+Flags:
+- `className (via Box wrapper)`: Use Box className to size the skeleton
+
+### Toast
+Transient status notifications. Call toast({...}) imperatively; render <Toaster /> once near root.
+
+Props:
+- `variant`: `neutral` | `success` | `error` | `warning` | `info`
+
+Flags:
+- `title`: Heading text
+- `description`: Body text
+- `duration`: Auto-dismiss time in ms (default 5000; 0 = permanent)
+- `action`: ReactNode action slot inside the toast
+- `Toaster`: Place once near the app root to render active toasts
+
+### Table
+A semantic table. Pass columns + data for the common case, or compose the primitives for full control.
+
+Flags:
+- `columns`: Array of { header, accessor: key | (row) => ReactNode, align? } — the props API
+- `data`: Array of row objects rendered against columns
+- `caption`: Caption rendered below the table (ReactNode)
+- `TableHeader / TableBody / TableFooter`: Escape hatch: thead / tbody / tfoot wrappers
+- `TableRow`: Escape hatch: tr with hover and selected states
+- `TableHead / TableCell`: Escape hatch: th / td; both take align="left|center|right"
+- `TableCaption`: Escape hatch: caption rendered below the table
+
+### DataTable
+The batteries-included table: column sorting, row selection, and optional client-side pagination, built on the Table primitives. Pass columns + data + rowKey.
+
+Flags:
+- `columns`: Array of { header, accessor, align?, sortable?, sortAccessor? }
+- `data`: Array of row objects
+- `rowKey`: (row) => string — stable id for selection and keys (required)
+- `selectable`: Adds a select-all + per-row checkbox column
+- `selected`: Controlled selection (array of ids); omit for uncontrolled
+- `onSelectedChange`: Callback with the new selected id array
+- `pageSize`: Enable client-side pagination at this page size
+- `caption`: Caption rendered below the table
+- `emptyState`: Content shown when there are no rows
+
+### Chart
+A token-driven ECharts surface. Pass a standard ECharts option; palette, axes, tooltip, and fonts are themed from the live --wf-* tokens and re-skin with the brand and color mode automatically. Auto-resizes.
+
+Flags:
+- `option`: A standard ECharts option object (xAxis/yAxis/series/…)
+- `height`: Pixel or CSS height; width fills the container (default 320)
+- `notMerge`: Replace the previous option wholesale instead of merging (default true)
+- `onEvents`: Map of ECharts event name → handler
+
+### Separator
+A horizontal or vertical visual divider.
+
+Props:
+- `orientation`: `horizontal` | `vertical`
+
+### CodeBlock
+A syntax-highlighted code surface. Highlighting runs locally (prism-react-renderer, no API); the theme is built from --wf-* tokens, so it re-skins with mode and brand automatically.
+
+Flags:
+- `code`: The source string to render
+- `language`: Prism language id (default 'tsx')
+- `filename`: Optional header filename, shown with the language label
+- `showLineNumbers`: Render a 1-based line-number gutter
+- `highlightLines`: Array of 1-based line numbers to emphasize
+- `wrap`: Soft-wrap long lines instead of scrolling
+- `maxHeight`: Max height before vertical scroll, e.g. '24rem'
+- `copyable`: Show the copy button (default true)
+
+### AppShell
+The guaranteed-layout frame: fixed sidebar on desktop, Sheet drawer on mobile, sticky header, scrollable main. Pass header and sidebar as slots.
+
+Flags:
+- `header`: Top-bar slot, typically an <AppBar>
+- `sidebar`: Side-navigation slot, typically a <SideNav>
+- `fullBleed`: Drop the default main padding for edge-to-edge content
+
+### AppBar
+The sticky top bar slot for AppShell: menu toggle, logo, title, and actions. Drop a <ModeToggle/> into actions for the light/dark/system switch.
+
+Props:
+- `variant`: `glass` | `solid`
+- `color`: `surface` | `subtle` | `inset`
+
+Flags:
+- `title`: Optional title text
+- `logo`: Optional logo ReactNode
+- `actions`: Right-aligned action ReactNode(s) — e.g. a <ModeToggle/>
+- `onMenuClick`: Override the menu-button handler (defaults to toggling the nav)
+
+### SideNav
+The data-driven side navigation: pass a typed items tree (item | group | section | divider); renders active state, nesting, and mobile drawer integration.
+
+Flags:
+- `items`: NavItem[] — the navigation tree (item/group/section/divider)
+- `activePath`: The currently active path, highlighted in the tree
+- `onNavigate`: Called with a path when a leaf is activated
+- `logo`: Optional logo ReactNode pinned to the nav header
+
+### ThemeProvider
+Provides color mode (light/dark/system) and optional runtime --wf-* token overrides for live re-skinning. Wrap the app once near the root.
+
+Flags:
+- `defaultMode`: Initial color mode: light | dark | system (default system)
+- `tokens`: A --wf-* override map, or (mode) => map for mode-aware brand swaps
+- `persist`: Persist the chosen mode to localStorage (default true)

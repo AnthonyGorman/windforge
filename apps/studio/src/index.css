@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: var(--wf-color-border-default);
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    margin: 0;
+    background-color: var(--wf-color-background-default);
+    color: var(--wf-color-text-primary);
+    font-family: var(--wf-font-sans);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  /* Token-driven selection + scrollbar so even chrome stays on-system. */
+  ::selection {
+    background-color: var(--wf-color-brand-primary-muted);
+  }
+  * {
+    scrollbar-color: var(--wf-color-border-strong) transparent;
+  }
+}

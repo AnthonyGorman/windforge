@@ -1,0 +1,22 @@
+{
+  "name": "windforge",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Windforge — a token-driven, AI-native design system. Radix + Tailwind, CSS-variable tokens, live-swappable accents.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "generate": "npm run generate -w @windforge/tokens",
+    "dev": "npm run dev -w windforge-studio",
+    "build": "npm run generate && npm run build -w windforge-studio",
+    "preview": "npm run preview -w windforge-studio",
+    "check:catalog": "npm run check:catalog -w @windforge/ui",
+    "check:contrast": "tsx packages/tokens/scripts/contrast-check.ts",
+    "check": "npm run generate && npm run check:catalog && npm run check:contrast"
+  },
+  "engines": {
+    "node": ">=18.18"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "@windforge/tokens",
+  "version": "0.1.1",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src/generated"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./tokens.css": "./src/generated/tokens.css",
+    "./tailwind": "./src/generated/tailwind-tokens.cjs",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "generate": "tsx scripts/generate.ts",
+    "brand-override": "tsx scripts/brand-override.ts",
+    "build": "tsup",
+    "prepublishOnly": "npm run generate && npm run build"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

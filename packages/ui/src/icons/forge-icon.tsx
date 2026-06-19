@@ -1,0 +1,55 @@
+import * as React from 'react'
+import { cn } from '../lib/utils'
+
+/**
+ * The Windforge brand mark — a hammer ("forge") fused with a wind swirl.
+ * Plain SVG (no MUI SvgIcon dependency): sized by `className` (default 1.5rem),
+ * renders the brand purple gradient. The gradient id is per-instance (useId) so
+ * many marks on one page stay collision-free.
+ */
+const WINDFORGE_PATH =
+  'M403.1,144.03 403.39,140.32 401.1,134.61 349.97,85.76 345.97,84.05 340.26,84.62 328.27,95.47 324.84,95.47 283.14,58.34 270,52.06 262,52.63 252.86,57.77 200.02,115.75 196.59,122.04 199.44,131.75 261.71,190.02 256,202.02 236.01,230.58 236.29,232.58 260.28,236.01 290.56,242.86 327.69,257.14 351.69,273.14 390.53,310.27 394.53,311.98 399.67,311.41 403.39,308.27 455.37,248.86 461.09,236.86 461.09,229.44 456.52,219.72 394.82,160.88 394.82,157.46 403.1,144.03Z M138.03,155.46 150.6,154.89 159.74,157.17 180.31,169.74 177.16,161.45 169.74,150.03 156.31,137.75 143.17,130.89 130.04,127.46 110.61,127.46 95.76,131.46 78.62,141.17 66.34,153.46 56.06,171.17 50.91,192.3 50.91,204.3 53.77,219.72 57.77,230.58 66.34,244.86 86.05,263.43 102.61,272.57 115.18,277.14 148.89,283.42 183.73,284.56 246.57,279.99 272.85,280.56 295.13,283.42 316.27,288.56 334.55,295.42 355.69,306.27 372.82,318.27 373.68,317.41 351.12,293.7 339.69,283.99 320.84,271.42 297.99,260.57 257.43,249.14 167.17,236.58 139.75,228.01 124.89,219.44 115.47,210.01 111.47,203.16 108.61,193.45 109.18,180.88 113.75,170.02 120.89,162.31 131.18,156.6 138.03,155.46Z M277.42,296.56 276.28,294.28 248.29,293.13 182.59,297.13 88.62,402.53 84.05,412.24 83.48,424.81 85.76,432.24 92.05,442.52 102.04,451.95 116.32,458.8 129.46,459.94 143.75,454.23 277.42,296.56Z'
+
+export interface ForgeIconProps extends React.SVGProps<SVGSVGElement> {}
+
+export const ForgeIcon = React.forwardRef<SVGSVGElement, ForgeIconProps>(
+  ({ className, ...props }, ref) => {
+    const gradId = `forge-${React.useId().replace(/:/g, '')}`
+    return (
+      <svg
+        ref={ref}
+        viewBox="0 0 512 512"
+        role="img"
+        aria-label="Windforge"
+        className={cn('h-6 w-6', className)}
+        {...props}
+      >
+        <defs>
+          <linearGradient id={gradId} x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stopColor="var(--wf-color-brand-primary-active)" />
+            <stop offset="1" stopColor="var(--wf-color-brand-secondary)" />
+          </linearGradient>
+        </defs>
+        <path fill={`url(#${gradId})`} fillRule="evenodd" d={WINDFORGE_PATH} />
+      </svg>
+    )
+  },
+)
+ForgeIcon.displayName = 'ForgeIcon'
+
+export interface WindforgeLogoProps {
+  className?: string
+  /** Hide the wordmark, show only the mark. */
+  markOnly?: boolean
+}
+
+export function WindforgeLogo({ className, markOnly = false }: WindforgeLogoProps) {
+  return (
+    <span className={cn('inline-flex items-center gap-2.5', className)}>
+      <ForgeIcon className="h-8 w-8 drop-shadow-sm" />
+      {!markOnly && (
+        <span className="text-base font-bold tracking-tight text-primary leading-none">WindForge</span>
+      )}
+    </span>
+  )
+}
