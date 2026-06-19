@@ -5,7 +5,7 @@
   // Wrangler's multi-app detection. The CF build runs `npm run build` first,
   // which produces apps/studio/dist.
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "windforge-studio",
+  "name": "windforge",
   "compatibility_date": "2025-01-01",
   "assets": {
     "directory": "./apps/studio/dist",
