@@ -6,16 +6,16 @@ guaranteed-on-system SaaS and client products with minimal effort.
 
 ## Two layers, component-first / style-last
 
-You build with Windforge through exactly two surfaces; Tailwind is an *internal
-implementation detail* you never touch.
+You build with Windforge through exactly two surfaces:
 
 1. **Component layer.** Compose components and set **intent-named props**
    (`variant="primary"`, `padding="card"`, `gap="md"`, `tone="muted"`). Props expose
-   only on-system options, so every permutation stays consistent. There is no raw
-   `<div>`/`<span>` and no `className`: in fact `className` and `style` are a
-   **compile error** on components, making Windforge stricter than MUI (which puts
-   `sx` on everything). Reach for `Box`/`Stack`/`Grid` for layout and `Text`/`H1`–`H6`
-   for type. Components are fluid; you size them by sizing the layout around them.
+   only on-system options, so every permutation stays consistent. On components,
+   `className` and `style` are a **compile error** — there's no per-component style
+   override, which makes Windforge stricter than MUI (which puts `sx` on everything).
+   Instead of raw `<div>`/`<span>`, reach for `Box`/`Stack`/`Grid` for layout (these
+   *do* take `className` — see the escape hatch below) and `Text`/`H1`–`H6` for type.
+   Components are fluid; you size them by sizing the layout around them.
 2. **Token layer.** Override the `--wf-*` CSS variables, anywhere and declaratively,
    to reskin the whole library at once (brand, density, radius, type). Because the
    component layer is consistent, a token change cannot break a layout; it just makes
