@@ -1,0 +1,15 @@
+{
+  // Deploys the built studio site (apps/studio/dist) to Cloudflare Workers as a
+  // static-asset ("assets-only") Worker — no server code. Lives at the repo root
+  // so `npx wrangler deploy` runs from the workspace root without tripping
+  // Wrangler's multi-app detection. The CF build runs `npm run build` first,
+  // which produces apps/studio/dist.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "windforge-studio",
+  "compatibility_date": "2025-01-01",
+  "assets": {
+    "directory": "./apps/studio/dist",
+    // BrowserRouter SPA: serve index.html for unknown client routes.
+    "not_found_handling": "single-page-application"
+  }
+}

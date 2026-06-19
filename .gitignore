@@ -5,6 +5,9 @@ node_modules/
 dist/
 *.tsbuildinfo
 
+# Wrangler / Cloudflare
+.wrangler/
+
 # npm pack artifacts
 *.tgz
 
